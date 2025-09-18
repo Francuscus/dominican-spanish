@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dominican Spanish IPA Transcriber</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Georgia', serif;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .dialect-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dialect-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dialect-option input[type="radio"] {
+            margin: 0;
+        }
+
+        .dialect-option label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .transcribe-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .transcribe-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .output-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .output-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .transcription-result {
+            background: white;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #2c3e50;
+            min-height: 100px;
+            white-space: pre-wrap;
+        }
+
+        .rules-applied {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f4fd;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+
+        .rules-applied h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .rules-applied ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .rules-applied li {
+            margin: 5px 0;
+            padding: 5px;
+            background: white;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .feature-toggle {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-toggle h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+        }
+
+        .feature-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .feature-item input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .feature-item label {
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🇩🇴 Dominican Spanish IPA Transcriber</h1>
+            <p class="subtitle">Convert Spanish text to Dominican Spanish pronunciation (Gualey/Santo Domingo variant)</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2>📝 Enter Spanish Text</h2>
+                <textarea id="inputText" placeholder="Enter your Spanish dialogue here... 
+
+Example:
+RAFAEL: ¡Lunes con lluvia y empanadas! ¿Quién quiere gozar este día?
+CARLA: Solo si tú limpias por mí. Estoy muy cansada."></textarea>
+            </div>
+
+            <div class="feature-toggle">
+                <h3>🔧 Phonological Features (Gualey/Santo Domingo)</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <input type="checkbox" id="sDelete" checked>
+                        <label for="sDelete">S-deletion/aspiration (muy → muj)</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="nasalVelar" checked>
+                        <label for="nasalVelar">Final n → ŋ (con → koŋ)</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="dWeaken" checked>
+                        <label for="dWeaken">Intervocalic d weakening (cansada → kansaða)</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="liquidSub" checked>
+                        <label for="liquidSub">Liquid substitution r→l (comer → komel)</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="velarR" checked>
+                        <label for="velarR">Velar initial r (Rafael → ɣafael)</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="liquidGlide">
+                        <label for="liquidGlide">Liquid to glide r→j (Cibao style)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="transcribe-btn" onclick="transcribe()">🎯 Transcribe to Dominican IPA</button>
+            </div>
+
+            <div class="output-section" id="outputSection" style="display: none;">
+                <h2>🎵 Dominican Spanish IPA Transcription</h2>
+                <div class="transcription-result" id="transcriptionResult"></div>
+                <div class="rules-applied" id="rulesApplied"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Spanish to IPA mapping for base pronunciation
+        const spanishToIPA = {
+            // Vowels
+            'a': 'a', 'e': 'e', 'i': 'i', 'o': 'o', 'u': 'u',
+            // Basic consonants
+            'b': 'β', 'v': 'β', 'c': 's', 'z': 's', 'd': 'd', 'f': 'f',
+            'g': 'ɣ', 'h': '', 'j': 'x', 'k': 'k', 'l': 'l', 'm': 'm',
+            'n': 'n', 'ñ': 'ɲ', 'p': 'p', 'q': 'k', 'r': 'ɾ', 'rr': 'r',
+            's': 's', 't': 't', 'w': 'w', 'x': 'ks', 'y': 'ʝ'
+        };
+
+        // Special combinations
+        const specialCombos = {
+            'ch': 'tʃ',
+            'll': 'ʎ',
+            'qu': 'k',
+            'gu': 'ɣ',
+            'ge': 'xe',
+            'gi': 'xi',
+            'ce': 'se',
+            'ci': 'si'
+        };
+
+        function basicSpanishToIPA(text) {
+            let result = text.toLowerCase();
+            
+            // Handle special combinations first
+            for (const [combo, ipa] of Object.entries(specialCombos)) {
+                result = result.replace(new RegExp(combo, 'g'), ipa);
+            }
+            
+            // Handle double r
+            result = result.replace(/rr/g, 'r');
+            
+            // Convert individual characters
+            result = result.split('').map(char => {
+                return spanishToIPA[char] || char;
+            }).join('');
+            
+            return result;
+        }
+
+        function applyDominicanRules(ipa, features) {
+            let result = ipa;
+            let appliedRules = [];
+
+            // 1. Final nasal velarization (n → ŋ)
+            if (features.nasalVelar) {
+                const beforeN = result;
+                result = result.replace(/n(?=\s|$)/g, 'ŋ');
+                if (result !== beforeN) appliedRules.push("Final n → ŋ (velarization)");
+            }
+
+            // 2. S-deletion/aspiration
+            if (features.sDelete) {
+                const beforeS = result;
+                // Word-final s deletion
+                result = result.replace(/s(?=\s|$)/g, '');
+                // Syllable-final s aspiration
+                result = result.replace(/s(?=[ptkg])/g, 'h');
+                if (result !== beforeS) appliedRules.push("S-deletion and aspiration");
+            }
+
+            // 3. Intervocalic d weakening
+            if (features.dWeaken) {
+                const beforeD = result;
+                result = result.replace(/([aeiou])d([aeiou])/g, '$1ð$2');
+                if (result !== beforeD) appliedRules.push("Intervocalic d → ð (weakening)");
+            }
+
+            // 4. Liquid substitution (Santo Domingo style: r→l in coda)
+            if (features.liquidSub) {
+                const beforeLiquid = result;
+                // r → l in syllable-final position
+                result = result.replace(/ɾ(?=\s|$|[ptkg])/g, 'l');
+                if (result !== beforeLiquid) appliedRules.push("Coda r → l (Santo Domingo liquid substitution)");
+            }
+
+            // 5. Liquid to glide (Cibao style: r→j)
+            if (features.liquidGlide) {
+                const beforeGlide = result;
+                result = result.replace(/ɾ(?=\s|$)/g, 'j');
+                if (result !== beforeGlide) appliedRules.push("Final r → j (Cibao-style liquid to glide)");
+            }
+
+            // 6. Velar initial r
+            if (features.velarR) {
+                const beforeVelar = result;
+                result = result.replace(/^ɾ/g, 'ɣ');
+                result = result.replace(/\sɾ/g, ' ɣ');
+                if (result !== beforeVelar) appliedRules.push("Word-initial r → ɣ (velar fricative)");
+            }
+
+            return { result, appliedRules };
+        }
+
+        function addStressMarks(ipa) {
+            // Simple stress marking for demonstration
+            // In a full implementation, this would be more sophisticated
+            const words = ipa.split(/\s+/);
+            return words.map(word => {
+                if (word.length > 2 && /[aeiou]/.test(word)) {
+                    // Find the stressed vowel (simplified heuristic)
+                    const vowelMatch = word.match(/[aeiou]/g);
+                    if (vowelMatch && vowelMatch.length > 1) {
+                        // Stress the penultimate vowel by default
+                        return word.replace(/([aeiou])(?=[^aeiou]*[aeiou][^aeiou]*$)/, 'ˈ$1');
+                    }
+                }
+                return word;
+            }).join(' ');
+        }
+
+        function transcribe() {
+            const inputText = document.getElementById('inputText').value;
+            if (!inputText.trim()) {
+                alert('Please enter some Spanish text to transcribe.');
+                return;
+            }
+
+            // Get selected features
+            const features = {
+                sDelete: document.getElementById('sDelete').checked,
+                nasalVelar: document.getElementById('nasalVelar').checked,
+                dWeaken: document.getElementById('dWeaken').checked,
+                liquidSub: document.getElementById('liquidSub').checked,
+                velarR: document.getElementById('velarR').checked,
+                liquidGlide: document.getElementById('liquidGlide').checked
+            };
+
+            // Process each line
+            const lines = inputText.split('\n');
+            let transcriptionLines = [];
+            let allAppliedRules = new Set();
+
+            lines.forEach(line => {
+                if (line.trim()) {
+                    // Check if it's a character name line
+                    const characterMatch = line.match(/^([A-Z]+)(\s*\([^)]+\))?\s*:?\s*(.*)/);
+                    
+                    if (characterMatch) {
+                        const [, character, stage, dialogue] = characterMatch;
+                        if (dialogue && dialogue.trim()) {
+                            // Transcribe the dialogue part
+                            const basicIPA = basicSpanishToIPA(dialogue);
+                            const { result: dominicanIPA, appliedRules } = applyDominicanRules(basicIPA, features);
+                            const finalIPA = addStressMarks(dominicanIPA);
+                            
+                            appliedRules.forEach(rule => allAppliedRules.add(rule));
+                            
+                            transcriptionLines.push(`**${character}${stage || ''}**`);
+                            transcriptionLines.push(`[${finalIPA}]`);
+                        } else {
+                            transcriptionLines.push(`**${character}${stage || ''}**`);
+                        }
+                    } else {
+                        // Regular text line
+                        const basicIPA = basicSpanishToIPA(line);
+                        const { result: dominicanIPA, appliedRules } = applyDominicanRules(basicIPA, features);
+                        const finalIPA = addStressMarks(dominicanIPA);
+                        
+                        appliedRules.forEach(rule => allAppliedRules.add(rule));
+                        transcriptionLines.push(`[${finalIPA}]`);
+                    }
+                }
+            });
+
+            // Display results
+            document.getElementById('transcriptionResult').textContent = transcriptionLines.join('\n');
+            
+            // Display applied rules
+            const rulesDiv = document.getElementById('rulesApplied');
+            if (allAppliedRules.size > 0) {
+                rulesDiv.innerHTML = `
+                    <h3>Applied Dominican Spanish Rules:</h3>
+                    <ul>
+                        ${Array.from(allAppliedRules).map(rule => `<li>${rule}</li>`).join('')}
+                    </ul>
+                `;
+            } else {
+                rulesDiv.innerHTML = '<h3>No phonological rules applied</h3>';
+            }
+
+            document.getElementById('outputSection').style.display = 'block';
+            document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Add enter key support for textarea
+        document.getElementById('inputText').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                transcribe();
+            }
+        });
+    </script>
+</body>
+</html>

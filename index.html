@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dominican Spanish IPA Transcriber</title>
+    <title>Spanish IPA Transcriber - Proper Syllabification</title>
     <style>
         * {
             margin: 0;
@@ -88,27 +88,6 @@
             align-items: center;
         }
 
-        .dialect-options {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .dialect-option {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .dialect-option input[type="radio"] {
-            margin: 0;
-        }
-
-        .dialect-option label {
-            font-size: 14px;
-            color: #555;
-        }
-
         .transcribe-btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -152,32 +131,6 @@
             white-space: pre-wrap;
         }
 
-        .rules-applied {
-            margin-top: 20px;
-            padding: 15px;
-            background: #e8f4fd;
-            border-left: 4px solid #667eea;
-            border-radius: 5px;
-        }
-
-        .rules-applied h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .rules-applied ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-        .rules-applied li {
-            margin: 5px 0;
-            padding: 5px;
-            background: white;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
         .feature-toggle {
             background: white;
             border-radius: 10px;
@@ -193,7 +146,7 @@
 
         .feature-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 10px;
         }
 
@@ -220,284 +173,290 @@
             cursor: pointer;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 15px;
-            }
+        .dialect-selector {
+            margin-bottom: 20px;
+        }
 
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .main-content {
-                padding: 20px;
-            }
-
-            .controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
+        .dialect-selector select {
+            padding: 10px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🇩🇴 Dominican Spanish IPA Transcriber</h1>
-            <p class="subtitle">Convert Spanish text to Dominican Spanish pronunciation (Gualey/Santo Domingo variant)</p>
+            <h1>Spanish IPA Transcriber - Proper Engine</h1>
+            <p class="subtitle">With correct syllabification and stress placement</p>
         </div>
 
         <div class="main-content">
             <div class="input-section">
-                <h2>📝 Enter Spanish Text</h2>
-                <textarea id="inputText" placeholder="Enter your Spanish dialogue here... 
+                <h2>Enter Spanish Text</h2>
+                <textarea id="inputText" placeholder="Voy a vivir el momento Para entender el destino Voy a escuchar en silencio Para encontrar el camino">Voy a vivir el momento
+Para entender el destino
+Voy a escuchar en silencio
+Para encontrar el camino</textarea>
+            </div>
 
-Example:
-RAFAEL: ¡Lunes con lluvia y empanadas! ¿Quién quiere gozar este día?
-CARLA: Solo si tú limpias por mí. Estoy muy cansada."></textarea>
+            <div class="dialect-selector">
+                <label for="dialectSelect">Choose dialect: </label>
+                <select id="dialectSelect">
+                    <option value="dominican">Dominican (Santo Domingo)</option>
+                    <option value="mexican">Mexican (Mexico City)</option>
+                </select>
             </div>
 
             <div class="feature-toggle">
-                <h3>🔧 Phonological Features (Gualey/Santo Domingo)</h3>
+                <h3>Features</h3>
                 <div class="feature-grid">
                     <div class="feature-item">
-                        <input type="checkbox" id="sDelete" checked>
-                        <label for="sDelete">S-deletion/aspiration (muy → muj)</label>
-                    </div>
-                    <div class="feature-item">
-                        <input type="checkbox" id="nasalVelar" checked>
-                        <label for="nasalVelar">Final n → ŋ (con → koŋ)</label>
-                    </div>
-                    <div class="feature-item">
-                        <input type="checkbox" id="dWeaken" checked>
-                        <label for="dWeaken">Intervocalic d weakening (cansada → kansaða)</label>
-                    </div>
-                    <div class="feature-item">
                         <input type="checkbox" id="liquidSub" checked>
-                        <label for="liquidSub">Liquid substitution r→l (comer → komel)</label>
+                        <label for="liquidSub">Liquid substitution r→l̪ (Dominican)</label>
                     </div>
                     <div class="feature-item">
-                        <input type="checkbox" id="velarR" checked>
-                        <label for="velarR">Velar initial r (Rafael → ɣafael)</label>
+                        <input type="checkbox" id="sDelete" checked>
+                        <label for="sDelete">S-deletion (Dominican)</label>
                     </div>
                     <div class="feature-item">
-                        <input type="checkbox" id="liquidGlide">
-                        <label for="liquidGlide">Liquid to glide r→j (Cibao style)</label>
+                        <input type="checkbox" id="assibilatedR" checked>
+                        <label for="assibilatedR">Assibilated r→ʂ (Mexican)</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="showSyllables" checked>
+                        <label for="showSyllables">Show syllable boundaries</label>
                     </div>
                 </div>
             </div>
 
             <div class="controls">
-                <button class="transcribe-btn" onclick="transcribe()">🎯 Transcribe to Dominican IPA</button>
+                <button class="transcribe-btn" onclick="transcribe()">Transcribe</button>
             </div>
 
             <div class="output-section" id="outputSection" style="display: none;">
-                <h2>🎵 Dominican Spanish IPA Transcription</h2>
+                <h2>IPA Transcription</h2>
                 <div class="transcription-result" id="transcriptionResult"></div>
-                <div class="rules-applied" id="rulesApplied"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // Spanish to IPA mapping for base pronunciation
-        const spanishToIPA = {
-            // Vowels
-            'a': 'a', 'e': 'e', 'i': 'i', 'o': 'o', 'u': 'u',
-            // Basic consonants
-            'b': 'β', 'v': 'β', 'c': 's', 'z': 's', 'd': 'd', 'f': 'f',
-            'g': 'ɣ', 'h': '', 'j': 'x', 'k': 'k', 'l': 'l', 'm': 'm',
-            'n': 'n', 'ñ': 'ɲ', 'p': 'p', 'q': 'k', 'r': 'ɾ', 'rr': 'r',
-            's': 's', 't': 't', 'w': 'w', 'x': 'ks', 'y': 'ʝ'
-        };
-
-        // Special combinations
-        const specialCombos = {
-            'ch': 'tʃ',
-            'll': 'ʝ',    // yeísmo - ll = y in Dominican Spanish
-            'qu': 'k',
-            'gu': 'ɣ',
-            'ge': 'xe',
-            'gi': 'xi',
-            'ce': 'se',
-            'ci': 'si'
-        };
-
-        function basicSpanishToIPA(text) {
+        // Step 1: Orthography to phonemes
+        function orthographyToPhonemes(text) {
             let result = text.toLowerCase();
             
-            // Handle special combinations first
-            for (const [combo, ipa] of Object.entries(specialCombos)) {
-                result = result.replace(new RegExp(combo, 'g'), ipa);
-            }
+            // Remove silent h
+            result = result.replace(/h/g, '');
             
-            // Handle double r
+            // Handle digraphs
+            result = result.replace(/ch/g, 'tʃ');
+            result = result.replace(/ll/g, 'ʝ'); // yeísmo
             result = result.replace(/rr/g, 'r');
+            result = result.replace(/qu/g, 'k');
             
-            // Convert individual characters
-            result = result.split('').map(char => {
-                return spanishToIPA[char] || char;
-            }).join('');
+            // Handle c/z
+            result = result.replace(/c([ei])/g, 's$1');
+            result = result.replace(/z/g, 's');
+            result = result.replace(/c/g, 'k');
+            
+            // Handle g
+            result = result.replace(/g([ei])/g, 'x$1');
+            result = result.replace(/gu([ei])/g, 'g$1');
+            
+            // Basic mappings
+            result = result.replace(/v/g, 'b');
+            result = result.replace(/y/g, 'ʝ');
+            result = result.replace(/j/g, 'x');
+            result = result.replace(/ñ/g, 'ɲ');
+            
+            // Convert single r to tap ɾ (will handle trill contexts later)
+            result = result.replace(/r/g, 'ɾ');
             
             return result;
         }
 
-        function applyDominicanRules(ipa, features) {
-            let result = ipa;
-            let appliedRules = [];
-
-            // 1. Final nasal velarization (n → ŋ)
-            if (features.nasalVelar) {
-                const beforeN = result;
-                result = result.replace(/n(?=\s|$)/g, 'ŋ');
-                if (result !== beforeN) appliedRules.push("Final n → ŋ (velarization)");
+        // Step 2: Syllabification
+        function syllabify(phonemes) {
+            const vowels = 'aeiou';
+            const consonants = 'bβdðgɣptkfθsxmnɲlrɾʝtʃɲj';
+            
+            const syllables = [];
+            let currentSyllable = '';
+            
+            for (let i = 0; i < phonemes.length; i++) {
+                const char = phonemes[i];
+                
+                if (vowels.includes(char)) {
+                    currentSyllable += char;
+                    
+                    // Look ahead for consonants
+                    let consonantCluster = '';
+                    let j = i + 1;
+                    while (j < phonemes.length && consonants.includes(phonemes[j])) {
+                        consonantCluster += phonemes[j];
+                        j++;
+                    }
+                    
+                    // Check if we're at the end of the word
+                    const isWordEnd = (j >= phonemes.length);
+                    
+                    // Syllable boundary rules
+                    if (consonantCluster.length === 0) {
+                        // No consonants - end syllable
+                        syllables.push(currentSyllable);
+                        currentSyllable = '';
+                    } else if (consonantCluster.length === 1 && isWordEnd) {
+                        // Single final consonant stays with current syllable (coda)
+                        currentSyllable += consonantCluster;
+                        syllables.push(currentSyllable);
+                        currentSyllable = '';
+                        i = j - 1;
+                    } else if (consonantCluster.length === 1) {
+                        // Single consonant goes to next syllable (onset)
+                        syllables.push(currentSyllable);
+                        currentSyllable = consonantCluster;
+                        i = j - 1;
+                    } else {
+                        // Multiple consonants - split based on position
+                        if (isWordEnd) {
+                            // Final cluster - take first consonant as coda
+                            currentSyllable += consonantCluster[0];
+                            syllables.push(currentSyllable);
+                            currentSyllable = consonantCluster.slice(1);
+                            i = j - 1;
+                        } else {
+                            // Internal cluster - first consonant stays as coda
+                            currentSyllable += consonantCluster[0];
+                            syllables.push(currentSyllable);
+                            currentSyllable = consonantCluster.slice(1);
+                            i = j - 1;
+                        }
+                    }
+                } else {
+                    currentSyllable += char;
+                }
             }
-
-            // 2. S-deletion/aspiration
-            if (features.sDelete) {
-                const beforeS = result;
-                // Word-final s deletion
-                result = result.replace(/s(?=\s|$)/g, '');
-                // Syllable-final s aspiration
-                result = result.replace(/s(?=[ptkg])/g, 'h');
-                if (result !== beforeS) appliedRules.push("S-deletion and aspiration");
+            
+            if (currentSyllable) {
+                syllables.push(currentSyllable);
             }
-
-            // 3. Intervocalic d weakening
-            if (features.dWeaken) {
-                const beforeD = result;
-                result = result.replace(/([aeiou])d([aeiou])/g, '$1ð$2');
-                if (result !== beforeD) appliedRules.push("Intervocalic d → ð (weakening)");
-            }
-
-            // 4. Liquid substitution (Santo Domingo style: r→l in coda)
-            if (features.liquidSub) {
-                const beforeLiquid = result;
-                // r → l in syllable-final position
-                result = result.replace(/ɾ(?=\s|$|[ptkg])/g, 'l');
-                if (result !== beforeLiquid) appliedRules.push("Coda r → l (Santo Domingo liquid substitution)");
-            }
-
-            // 5. Liquid to glide (Cibao style: r→j)
-            if (features.liquidGlide) {
-                const beforeGlide = result;
-                result = result.replace(/ɾ(?=\s|$)/g, 'j');
-                if (result !== beforeGlide) appliedRules.push("Final r → j (Cibao-style liquid to glide)");
-            }
-
-            // 6. Velar initial r
-            if (features.velarR) {
-                const beforeVelar = result;
-                result = result.replace(/^ɾ/g, 'ɣ');
-                result = result.replace(/\sɾ/g, ' ɣ');
-                if (result !== beforeVelar) appliedRules.push("Word-initial r → ɣ (velar fricative)");
-            }
-
-            return { result, appliedRules };
+            
+            return syllables;
         }
 
-        function addStressMarks(ipa) {
-            // Simple stress marking for demonstration
-            // In a full implementation, this would be more sophisticated
-            const words = ipa.split(/\s+/);
-            return words.map(word => {
-                if (word.length > 2 && /[aeiou]/.test(word)) {
-                    // Find the stressed vowel (simplified heuristic)
-                    const vowelMatch = word.match(/[aeiou]/g);
-                    if (vowelMatch && vowelMatch.length > 1) {
-                        // Stress the penultimate vowel by default
-                        return word.replace(/([aeiou])(?=[^aeiou]*[aeiou][^aeiou]*$)/, 'ˈ$1');
+        // Step 3: Apply stress to syllables
+        function applyStress(syllables, originalWord) {
+            if (syllables.length < 2) return syllables;
+            
+            const lastChar = originalWord[originalWord.length - 1];
+            const endsInVowelNS = /[aeioun]/.test(lastChar);
+            
+            let stressedSyllableIndex;
+            if (endsInVowelNS) {
+                // Penultimate stress
+                stressedSyllableIndex = syllables.length - 2;
+            } else {
+                // Final stress
+                stressedSyllableIndex = syllables.length - 1;
+            }
+            
+            // Add stress mark to beginning of syllable
+            syllables[stressedSyllableIndex] = 'ˈ' + syllables[stressedSyllableIndex];
+            
+            return syllables;
+        }
+
+        // Step 4: Apply phonological rules
+        function applyRules(syllables, dialect, features) {
+            return syllables.map(syllable => {
+                let result = syllable;
+                
+                // General Spanish rules
+                result = result.replace(/([aeiou])b/g, '$1β');
+                result = result.replace(/([aeiou])d/g, '$1ð');
+                result = result.replace(/([aeiou])g/g, '$1ɣ');
+                
+                // Handle stress mark preservation
+                const hasStress = result.includes('ˈ');
+                if (hasStress) {
+                    result = result.replace('ˈ', '');
+                }
+                
+                // Coda detection and rules
+                const vowelMatch = result.match(/[aeiou]/);
+                if (vowelMatch) {
+                    const vowelIndex = result.indexOf(vowelMatch[0]);
+                    const afterVowel = result.slice(vowelIndex + 1);
+                    
+                    if (dialect === 'dominican' && features.liquidSub) {
+                        // r/ɾ in coda (after vowel, at end or before consonant) → l̪
+                        result = result.replace(/([aeiou])[rɾ]$/g, '$1l̪'); // word-final
+                        result = result.replace(/([aeiou])[rɾ](?=[bβdðgɣptkfθsxmnɲltʃʝ])/g, '$1l̪'); // before consonant
+                    }
+                    
+                    if (dialect === 'mexican' && features.assibilatedR) {
+                        // r/ɾ → ʂ (except word-initial)
+                        if (!result.startsWith('ɾ') && !result.startsWith('r')) {
+                            result = result.replace(/[rɾ]/g, 'ʂ');
+                        }
                     }
                 }
-                return word;
-            }).join(' ');
+                
+                // Dominican s-deletion
+                if (dialect === 'dominican' && features.sDelete) {
+                    result = result.replace(/s$/g, ''); // Final s
+                    result = result.replace(/s(?=[ptkg])/g, 'h'); // Pre-consonantal s
+                }
+                
+                // Add dental diacritic to all l
+                result = result.replace(/l/g, 'l̪');
+                
+                // Restore stress mark
+                if (hasStress) {
+                    result = 'ˈ' + result;
+                }
+                
+                return result;
+            });
         }
 
         function transcribe() {
-            const inputText = document.getElementById('inputText').value;
-            if (!inputText.trim()) {
-                alert('Please enter some Spanish text to transcribe.');
-                return;
-            }
+            const input = document.getElementById('inputText').value;
+            if (!input.trim()) return;
 
-            // Get selected features
+            const dialect = document.getElementById('dialectSelect').value;
             const features = {
-                sDelete: document.getElementById('sDelete').checked,
-                nasalVelar: document.getElementById('nasalVelar').checked,
-                dWeaken: document.getElementById('dWeaken').checked,
                 liquidSub: document.getElementById('liquidSub').checked,
-                velarR: document.getElementById('velarR').checked,
-                liquidGlide: document.getElementById('liquidGlide').checked
+                sDelete: document.getElementById('sDelete').checked,
+                assibilatedR: document.getElementById('assibilatedR').checked,
+                showSyllables: document.getElementById('showSyllables').checked
             };
 
-            // Process each line
-            const lines = inputText.split('\n');
-            let transcriptionLines = [];
-            let allAppliedRules = new Set();
+            const words = input.toLowerCase().split(/\s+/);
+            const results = [];
 
-            lines.forEach(line => {
-                if (line.trim()) {
-                    // Check if it's a character name line
-                    const characterMatch = line.match(/^([A-Z]+)(\s*\([^)]+\))?\s*:?\s*(.*)/);
+            words.forEach(word => {
+                if (word.trim()) {
+                    // Process word
+                    let phonemes = orthographyToPhonemes(word);
+                    let syllables = syllabify(phonemes);
+                    syllables = applyStress(syllables, word);
+                    syllables = applyRules(syllables, dialect, features);
                     
-                    if (characterMatch) {
-                        const [, character, stage, dialogue] = characterMatch;
-                        if (dialogue && dialogue.trim()) {
-                            // Transcribe the dialogue part
-                            const basicIPA = basicSpanishToIPA(dialogue);
-                            const { result: dominicanIPA, appliedRules } = applyDominicanRules(basicIPA, features);
-                            const finalIPA = addStressMarks(dominicanIPA);
-                            
-                            appliedRules.forEach(rule => allAppliedRules.add(rule));
-                            
-                            transcriptionLines.push(`**${character}${stage || ''}**`);
-                            transcriptionLines.push(`[${finalIPA}]`);
-                        } else {
-                            transcriptionLines.push(`**${character}${stage || ''}**`);
-                        }
+                    if (features.showSyllables) {
+                        results.push(syllables.join('.'));
                     } else {
-                        // Regular text line
-                        const basicIPA = basicSpanishToIPA(line);
-                        const { result: dominicanIPA, appliedRules } = applyDominicanRules(basicIPA, features);
-                        const finalIPA = addStressMarks(dominicanIPA);
-                        
-                        appliedRules.forEach(rule => allAppliedRules.add(rule));
-                        transcriptionLines.push(`[${finalIPA}]`);
+                        results.push(syllables.join(''));
                     }
                 }
             });
 
-            // Display results
-            document.getElementById('transcriptionResult').textContent = transcriptionLines.join('\n');
-            
-            // Display applied rules
-            const rulesDiv = document.getElementById('rulesApplied');
-            if (allAppliedRules.size > 0) {
-                rulesDiv.innerHTML = `
-                    <h3>Applied Dominican Spanish Rules:</h3>
-                    <ul>
-                        ${Array.from(allAppliedRules).map(rule => `<li>${rule}</li>`).join('')}
-                    </ul>
-                `;
-            } else {
-                rulesDiv.innerHTML = '<h3>No phonological rules applied</h3>';
-            }
-
+            document.getElementById('transcriptionResult').textContent = `[${results.join(' ')}]`;
             document.getElementById('outputSection').style.display = 'block';
-            document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
         }
-
-        // Add enter key support for textarea
-        document.getElementById('inputText').addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'Enter') {
-                transcribe();
-            }
-        });
     </script>
 </body>
 </html>

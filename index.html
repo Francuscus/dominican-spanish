@@ -374,34 +374,31 @@ Para encontrar el camino</textarea>
             return syllables.map(syllable => {
                 let result = syllable;
                 
-                // General Spanish rules
-                result = result.replace(/([aeiou])b/g, '$1β');
-                result = result.replace(/([aeiou])d/g, '$1ð');
-                result = result.replace(/([aeiou])g/g, '$1ɣ');
-                
                 // Handle stress mark preservation
                 const hasStress = result.includes('ˈ');
                 if (hasStress) {
                     result = result.replace('ˈ', '');
                 }
                 
-                // Coda detection and rules
-                const vowelMatch = result.match(/[aeiou]/);
-                if (vowelMatch) {
-                    const vowelIndex = result.indexOf(vowelMatch[0]);
-                    const afterVowel = result.slice(vowelIndex + 1);
-                    
-                    if (dialect === 'dominican' && features.liquidSub) {
-                        // r/ɾ in coda (after vowel, at end or before consonant) → l̪
-                        result = result.replace(/([aeiou])[rɾ]$/g, '$1l̪'); // word-final
-                        result = result.replace(/([aeiou])[rɾ](?=[bβdðgɣptkfθsxmnɲltʃʝ])/g, '$1l̪'); // before consonant
-                    }
-                    
-                    if (dialect === 'mexican' && features.assibilatedR) {
-                        // r/ɾ → ʂ (except word-initial)
-                        if (!result.startsWith('ɾ') && !result.startsWith('r')) {
-                            result = result.replace(/[rɾ]/g, 'ʂ');
-                        }
+                // General Spanish rules
+                result = result.replace(/([aeiou])b/g, '$1β');
+                result = result.replace(/([aeiou])d/g, '$1ð');
+                result = result.replace(/([aeiou])g/g, '$1ɣ');
+                
+                if (dialect === 'dominican' && features.liquidSub) {
+                    // Dominican r/ɾ → l̪ in coda position
+                    // This means: after a vowel AND (at end of syllable OR before another consonant)
+                    result = result.replace(/([aeiou])ɾ$/g, '$1l̪'); // word-final ɾ
+                    result = result.replace(/([aeiou])r$/g, '$1l̪');  // word-final r
+                    result = result.replace(/([aeiou])ɾ([bβdðgɣptkfθsxmnɲltʃʝ])/g, '$1l̪$2'); // ɾ before consonant
+                    result = result.replace(/([aeiou])r([bβdðgɣptkfθsxmnɲltʃʝ])/g, '$1l̪$2');  // r before consonant
+                }
+                
+                if (dialect === 'mexican' && features.assibilatedR) {
+                    // Mexican r/ɾ → ʂ (except word-initial)
+                    if (!result.startsWith('ɾ') && !result.startsWith('r')) {
+                        result = result.replace(/ɾ/g, 'ʂ');
+                        result = result.replace(/r/g, 'ʂ');
                     }
                 }
                 
@@ -411,8 +408,8 @@ Para encontrar el camino</textarea>
                     result = result.replace(/s(?=[ptkg])/g, 'h'); // Pre-consonantal s
                 }
                 
-                // Add dental diacritic to all l
-                result = result.replace(/l/g, 'l̪');
+                // Add dental diacritic to all l (but not if already l̪)
+                result = result.replace(/l(?!̪)/g, 'l̪');
                 
                 // Restore stress mark
                 if (hasStress) {
